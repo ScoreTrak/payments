@@ -23,20 +23,22 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 	db, err := sql.Open("sqlite3", conf.DBName)
 	if err != nil {
 		panic(err) // TODO: Change this?
 	}
 	defer db.Close()
 	initTables(db)
-	cc1, err := grpc.Dial(conf.ScoretrakAddress, grpc.WithInsecure())
+	cc, err := grpc.Dial(conf.ScoreTrakAddress, grpc.WithInsecure())
 	if err != nil {
 		log.Fatal("cannot dial server: ", err)
 	}
-	acli := auth.NewAuthServiceClient(cc1)
+	authClient := auth.NewAuthServiceClient(cc)
 	log.Println("Requesting authentication token")
-	t, err := getAuth(acli)
+	t, err := getAuth(authClient)
+	if err != nil {
+		panic(err)
+	}
 	token, _, err := new(jwt.Parser).ParseUnverified(t, &auth.UserClaims{})
 	if err != nil {
 		panic(err)
@@ -48,15 +50,15 @@ func main() {
 	log.Println("Authentication token is valid until " + time.Unix(claims.ExpiresAt, 0).String())
 	log.Println("Requesting report")
 
-	respcli := reportpb.NewReportServiceClient(cc1)
+	reportClient := reportpb.NewReportServiceClient(cc)
 
-	r, err := getReport(respcli, t)
+	latestReport, err := getReport(reportClient, t)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	log.Printf("Got report for round %d\n", r.Round)
+	log.Printf("Got report for round %d\n", latestReport.Round)
 
-	current := r.PointsPerTeam()
+	current := latestReport.PointsPerTeam()
 	previous := getMaxPointsPerTeam(db)
 	diff := computePointsDiff(current, previous)
 	client := http.Client{Timeout: time.Duration(conf.ClientTimeout) * time.Second}

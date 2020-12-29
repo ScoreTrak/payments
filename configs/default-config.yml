@@ -1,5 +1,4 @@
-bank_username: "username"
-bank_password: "password"
-bank_base_url: "https://bank.ubnetdef.org"
-
-amount_per_point: 10
+bankusername: "username"
+bankpassword: "password"
+bankbaseurl: "https://bank.ubnetdef.org"
+bankamountperpoint: 10
