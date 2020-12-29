@@ -24,15 +24,15 @@ func getReport(repCli reportpb.ReportServiceClient, token string) (*report.Repor
 	if err != nil {
 		return nil, err
 	}
-	r := new(report.Report)
+	latestReport := new(report.Report)
 	res, err := resp.Recv()
 	if err != nil {
 		log.Fatal("stream was closed: ", err)
 	}
 	defer resp.Context().Done()
-	err = json.Unmarshal([]byte(res.Report.Cache), r)
+	err = json.Unmarshal([]byte(res.Report.Cache), latestReport)
 	if err != nil {
 		return nil, err
 	}
-	return r, nil
+	return latestReport, nil
 }
