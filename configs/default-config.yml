@@ -1,0 +1,4 @@
+bankusername: "username"
+bankpassword: "password"
+bankbaseurl: "https://bank.ubnetdef.org"
+bankamountperpoint: 10
