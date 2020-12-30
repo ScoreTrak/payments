@@ -8,4 +8,4 @@ FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /go/src/github.com/ubnetdef/lockdown-hs4-payments/payer .
 RUN chmod +x payer
-ENTRYPOINT ["./payer", "--config"]
+ENTRYPOINT ["./payer"]
