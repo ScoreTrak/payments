@@ -1,0 +1,14 @@
+bankusername: "admin"
+bankpassword: "admin"
+bankbaseurl: "http://backend:8000"
+scoretrakusername: "bank"
+scoretrakpassword: "changeme"
+scoretrakaddress: "scoretrak:33333"
+db:
+  cockroach:
+    host: scoretrak-cockroachdb-public
+    password: SOME_SECURE_PASSWORD
+    clientca: "/cockroach-certs/ca.crt"
+    clientsslkey: "/cockroach-certs/client.root.key"
+    clientsslcert: "/cockroach-certs/client.root.crt"
+    database: payments

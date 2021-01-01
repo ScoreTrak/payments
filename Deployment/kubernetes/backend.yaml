@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      initContainers:
+        - name: init-certs
+          image: cockroachdb/cockroach-k8s-request-cert:0.4
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/bin/ash"
+            - "-ecx"
+            - "/request-cert -namespace=${POD_NAMESPACE} -certs-dir=/cockroach-certs -type=client -user=root -symlink-ca-from=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          volumeMounts:
+            - name: client-certs
+              mountPath: /cockroach-certs
+            - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              name: cockroach-cert-token
+
+        - name: change-cert-perms
+          image: cockroachdb/cockroach-k8s-request-cert:0.4
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/bin/ash"
+            - "-ecx"
+            - "chown 1234:1234 /cockroach-certs/client.root.key /cockroach-certs/client.root.crt"
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          volumeMounts:
+            - name: client-certs
+              mountPath: /cockroach-certs
+
+      containers:
+        - name: backend
+          image: ubnetdef/lockdown-commerce-backend:latest
+          imagePullPolicy: Always
+          env:
+            - name: DB_SSLMODE
+              value: "require"
+            - name: DB_SSLROOTCERT
+              value: "/cockroach-certs/ca.crt"
+            - name: DB_SSLCERT
+              value: "/cockroach-certs/client.root.crt"
+            - name: DB_SSLKEY
+              value: "/cockroach-certs/client.root.key"
+            - name: POSTGRES_DB
+              value: "bank"
+            - name: POSTGRES_USER
+              value: "root"
+            - name: POSTGRES_PASSWORD
+              value: "SOME_SECURE_PASSWORD"
+            - name: USE_COCKROACHDB
+              value: "true"
+            - name: POSTGRES_PORT
+              value: "26257"
+            - name: POSTGRES_HOST
+              value: "scoretrak-cockroachdb-public"
+            - name: SECRET_KEY
+              value: "SOME_RANDOM_VALUE"
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: client-certs
+              mountPath: /cockroach-certs
+          command:
+            - /bin/bash
+            - -c
+            - sleep 20; python ./manage.py runserver 0.0.0.0:8000 #For some reason sleeping is required, otherwise we get: Is the server running on host "scoretrak-cockroachdb-public" (10.233.16.67) and accepting TCP/IP connections on port 26257?
+
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: 8000
+#            initialDelaySeconds: 3
+#            periodSeconds: 3
+
+      volumes:
+        - name: client-certs
+          emptyDir: {}
+        - name: cockroach-cert-token
+          secret:
+            secretName: cockroachdb-client-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 8000
+      name: http
