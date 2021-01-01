@@ -1,6 +1,9 @@
 package main
 
-import "github.com/jinzhu/configor"
+import (
+	"github.com/ScoreTrak/ScoreTrak/pkg/storage"
+	"github.com/jinzhu/configor"
+)
 
 type Config struct {
 	BankUsername       string `default:""`
@@ -10,8 +13,8 @@ type Config struct {
 	BankBaseUrl        string `default:"http://localhost"`
 	ScoreTrakAddress   string `default:"localhost"`
 	BankAmountPerPoint uint   `default:"10"`
-	DBName             string `default:"bank"`
 	ClientTimeout      uint   `default:"5"`
+	DB                 storage.Config
 }
 
 func NewConfig(f string) (*Config, error) {

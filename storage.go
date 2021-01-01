@@ -1,22 +1,28 @@
 package main
 
 import (
-	"database/sql"
+	"gorm.io/gorm"
 	"log"
-	"strings"
+	"time"
 )
 
-func initTables(db *sql.DB) {
-	db.Exec(`CREATE TABLE samples (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		sampled_at DATETIME DEFAULT (datetime('now')),
-		team INTEGER,
-		points INTEGER
-	)`)
+type Sample struct {
+	ID        uint `gorm:"primaryKey"`
+	CreatedAt time.Time
+	Team      int
+	Points    uint
 }
 
-func getMaxPointsPerTeam(db *sql.DB) map[int]uint {
-	rows, err := db.Query("SELECT team, MAX(points) FROM samples GROUP BY team")
+func initTables(db *gorm.DB) error {
+	err := db.AutoMigrate(&Sample{})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func getMaxPointsPerTeam(db *gorm.DB) map[int]uint {
+	rows, err := db.Raw("SELECT team, MAX(points) FROM samples GROUP BY team").Rows()
 	if err != nil {
 		panic(err) // TODO: Change this?
 	}
@@ -33,25 +39,15 @@ func getMaxPointsPerTeam(db *sql.DB) map[int]uint {
 	return teamPoints
 }
 
-func updateMaxPointsPerTeam(db *sql.DB, teamPoints map[int]uint) {
-	stmtStr := "INSERT INTO samples (team, points) VALUES"
-	var values []interface{}
+func updateMaxPointsPerTeam(db *gorm.DB, teamPoints map[int]uint) {
+	var samples []*Sample
 	for team, points := range teamPoints {
-		stmtStr += " (?, ?),"
-		values = append(values, team, points)
+		samples = append(samples, &Sample{Team: team, Points: points})
 	}
-	stmtStr = strings.TrimSuffix(stmtStr, ",") // Remove extra comma.
-	stmt, err := db.Prepare(stmtStr)
-	if err != nil {
-		panic(err)
+	result := db.Create(samples)
+	if result.Error != nil {
+		panic(result.Error)
 	}
-	result, err := stmt.Exec(values...)
-	if err != nil {
-		panic(err)
-	}
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		panic(err)
-	}
+	rowsAffected := result.RowsAffected
 	log.Printf("Rows affected: %d\n", rowsAffected)
 }

@@ -1,12 +1,11 @@
 package main
 
 import (
-	"database/sql"
 	"flag"
 	"github.com/ScoreTrak/ScoreTrak/pkg/auth"
 	"github.com/ScoreTrak/ScoreTrak/pkg/report/reportpb"
+	"github.com/ScoreTrak/ScoreTrak/pkg/storage"
 	"github.com/dgrijalva/jwt-go"
-	_ "github.com/mattn/go-sqlite3"
 	"google.golang.org/grpc"
 	"log"
 	"net/http"
@@ -23,12 +22,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	db, err := sql.Open("sqlite3", conf.DBName)
+	db, err := storage.NewDB(conf.DB)
 	if err != nil {
-		panic(err) // TODO: Change this?
+		panic(err)
 	}
-	defer db.Close()
-	initTables(db)
+	err = initTables(db)
+	if err != nil {
+		panic(err)
+	}
 	cc, err := grpc.Dial(conf.ScoreTrakAddress, grpc.WithInsecure())
 	if err != nil {
 		log.Fatal("cannot dial server: ", err)
@@ -49,15 +50,12 @@ func main() {
 	}
 	log.Println("Authentication token is valid until " + time.Unix(claims.ExpiresAt, 0).String())
 	log.Println("Requesting report")
-
 	reportClient := reportpb.NewReportServiceClient(cc)
-
 	latestReport, err := getReport(reportClient, t)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	log.Printf("Got report for round %d\n", latestReport.Round)
-
 	current := latestReport.PointsPerTeam()
 	previous := getMaxPointsPerTeam(db)
 	diff := computePointsDiff(current, previous)
