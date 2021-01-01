@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -56,6 +57,11 @@ func makeDeposit(client http.Client, teamPoints map[int]uint) {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		panic("Failed to deposit")
+		var errBody string
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			errBody = string(body)
+		}
+		panic(fmt.Sprintf("Failed to deposit, Code: %s. Error: %s", resp.Status, errBody))
 	}
 }
