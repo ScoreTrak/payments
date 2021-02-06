@@ -24,6 +24,6 @@ vendor/
 
 #Log files
 *.log
-
+*.local*
 configs/config.yml
 dev-config.yml
