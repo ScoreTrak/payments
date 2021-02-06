@@ -58,6 +58,8 @@ spec:
               value: "true"
             - name: SECRET_KEY
               value: "SOME_RANDOM_VALUE"
+            - name: DISCORD_WEBHOOK_URL
+              value: "http://SomeDiscordWebHook"
           ports:
             - containerPort: 8000
           volumeMounts:
