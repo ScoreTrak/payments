@@ -52,26 +52,10 @@ spec:
           image: ubnetdef/lockdown-commerce-backend:latest
           imagePullPolicy: Always
           env:
-            - name: DB_SSLMODE
-              value: "require"
-            - name: DB_SSLROOTCERT
-              value: "/cockroach-certs/ca.crt"
-            - name: DB_SSLCERT
-              value: "/cockroach-certs/client.root.crt"
-            - name: DB_SSLKEY
-              value: "/cockroach-certs/client.root.key"
-            - name: POSTGRES_DB
-              value: "bank"
-            - name: POSTGRES_USER
-              value: "root"
-            - name: POSTGRES_PASSWORD
-              value: "SOME_SECURE_PASSWORD"
+            - name: "DATABASE_URL"
+              value: "postgresql://root:SOME_SECURE_PASSWORD@scoretrak-cockroachdb-public:26257/bank?sslmode=require&sslcert=/cockroach-certs/client.root.crt&sslkey=/cockroach-certs/client.root.key&sslrootcert=/cockroach-certs/ca.crt"
             - name: USE_COCKROACHDB
               value: "true"
-            - name: POSTGRES_PORT
-              value: "26257"
-            - name: POSTGRES_HOST
-              value: "scoretrak-cockroachdb-public"
             - name: SECRET_KEY
               value: "SOME_RANDOM_VALUE"
           ports:
