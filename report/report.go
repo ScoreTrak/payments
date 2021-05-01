@@ -13,7 +13,7 @@ func (r *Report) PointsPerTeam() map[int]uint {
 	points := make(map[int]uint)
 
 	for _, team := range r.Teams {
-		if !team.Enabled {
+		if !team.Pause {
 			log.Println("Skipping disabled team " + team.Name)
 			continue
 		}

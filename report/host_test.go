@@ -4,13 +4,13 @@ import "testing"
 
 func TestHostEnabled(t *testing.T) {
 	h := Host{
-		Enabled: true,
+		Pause: true,
 		Services: map[string]*Service{
-			"a": {Enabled: true, Points: 1},
-			"b": {Enabled: true, Points: 20},
-			"c": {Enabled: true, Points: 300},
-			"d": {Enabled: false, Points: 4000},
-			"e": {Enabled: true, Points: 50000},
+			"a": {Pause: true, Points: 1},
+			"b": {Pause: true, Points: 20},
+			"c": {Pause: true, Points: 300},
+			"d": {Pause: false, Points: 4000},
+			"e": {Pause: true, Points: 50000},
 		},
 	}
 
@@ -21,13 +21,13 @@ func TestHostEnabled(t *testing.T) {
 
 func TestHostDisabled(t *testing.T) {
 	h := Host{
-		Enabled: false,
+		Pause: false,
 		Services: map[string]*Service{
-			"a": {Enabled: true, Points: 1},
-			"b": {Enabled: true, Points: 20},
-			"c": {Enabled: true, Points: 300},
-			"d": {Enabled: false, Points: 4000},
-			"e": {Enabled: true, Points: 50000},
+			"a": {Pause: true, Points: 1},
+			"b": {Pause: true, Points: 20},
+			"c": {Pause: true, Points: 300},
+			"d": {Pause: false, Points: 4000},
+			"e": {Pause: true, Points: 50000},
 		},
 	}
 

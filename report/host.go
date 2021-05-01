@@ -1,12 +1,12 @@
 package report
 
 type Host struct {
-	Enabled  bool
+	Pause    bool
 	Services map[string]*Service
 }
 
 func (h *Host) TotalPoints() uint {
-	if !h.Enabled {
+	if !h.Pause {
 		return 0
 	}
 	var total uint = 0

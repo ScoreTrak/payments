@@ -6,13 +6,13 @@ import (
 )
 
 type Team struct {
-	Name    string
-	Enabled bool
-	Hosts   map[string]*Host
+	Name  string
+	Pause bool
+	Hosts map[string]*Host
 }
 
 func (t *Team) TotalPoints() uint {
-	if !t.Enabled {
+	if !t.Pause {
 		return 0
 	}
 	var total uint = 0

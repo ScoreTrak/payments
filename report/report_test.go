@@ -8,27 +8,27 @@ func TestReport(t *testing.T) {
 		Round: 123,
 		Teams: map[string]*Team{
 			"team-1": {
-				Enabled: true,
+				Pause: true,
 				Hosts: map[string]*Host{
 					"host-a": {
-						Enabled: true,
+						Pause: true,
 						Services: map[string]*Service{
-							"service-a": {Enabled: true, Points: 1},
-							"service-b": {Enabled: true, Points: 20},
+							"service-a": {Pause: true, Points: 1},
+							"service-b": {Pause: true, Points: 20},
 						},
 					},
 					"host-b": {
-						Enabled: false,
+						Pause: false,
 						Services: map[string]*Service{
-							"service-c": {Enabled: true, Points: 300},
-							"service-d": {Enabled: true, Points: 4000},
+							"service-c": {Pause: true, Points: 300},
+							"service-d": {Pause: true, Points: 4000},
 						},
 					},
 					"host-c": {
-						Enabled: true,
+						Pause: true,
 						Services: map[string]*Service{
-							"service-e": {Enabled: true, Points: 50000},
-							"service-f": {Enabled: true, Points: 600000},
+							"service-e": {Pause: true, Points: 50000},
+							"service-f": {Pause: true, Points: 600000},
 						},
 					},
 				},

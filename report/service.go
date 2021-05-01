@@ -1,13 +1,13 @@
 package report
 
 type Service struct {
-	Name    string
-	Enabled bool
-	Points  uint
+	Name   string
+	Pause  bool
+	Points uint
 }
 
 func (s *Service) TotalPoints() uint {
-	if !s.Enabled {
+	if !s.Pause {
 		return 0
 	}
 	return s.Points
