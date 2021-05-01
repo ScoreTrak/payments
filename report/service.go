@@ -1,13 +1,9 @@
 package report
 
-type Service struct {
-	Name   string
-	Pause  bool
-	Points uint
-}
+import "github.com/ScoreTrak/ScoreTrak/pkg/report"
 
-func (s *Service) TotalPoints() uint {
-	if !s.Pause {
+func TotalServicePoints(s *report.SimpleService) uint64 {
+	if s.Pause {
 		return 0
 	}
 	return s.Points

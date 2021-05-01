@@ -1,37 +1,41 @@
 package report
 
-import "testing"
+import (
+	"github.com/ScoreTrak/ScoreTrak/pkg/report"
+	"github.com/gofrs/uuid"
+	"testing"
+)
 
 func TestHostEnabled(t *testing.T) {
-	h := Host{
-		Pause: true,
-		Services: map[string]*Service{
-			"a": {Pause: true, Points: 1},
-			"b": {Pause: true, Points: 20},
-			"c": {Pause: true, Points: 300},
-			"d": {Pause: false, Points: 4000},
-			"e": {Pause: true, Points: 50000},
+	h := report.SimpleHost{
+		Pause: false,
+		Services: map[uuid.UUID]*report.SimpleService{
+			uuid.Must(uuid.NewV4()): {Pause: false, Points: 1},
+			uuid.Must(uuid.NewV4()): {Pause: false, Points: 20},
+			uuid.Must(uuid.NewV4()): {Pause: false, Points: 300},
+			uuid.Must(uuid.NewV4()): {Pause: true, Points: 4000},
+			uuid.Must(uuid.NewV4()): {Pause: false, Points: 50000},
 		},
 	}
 
-	if h.TotalPoints() != 50321 {
+	if TotalHostPoints(&h) != 50321 {
 		t.Fail()
 	}
 }
 
 func TestHostDisabled(t *testing.T) {
-	h := Host{
-		Pause: false,
-		Services: map[string]*Service{
-			"a": {Pause: true, Points: 1},
-			"b": {Pause: true, Points: 20},
-			"c": {Pause: true, Points: 300},
-			"d": {Pause: false, Points: 4000},
-			"e": {Pause: true, Points: 50000},
+	h := report.SimpleHost{
+		Pause: true,
+		Services: map[uuid.UUID]*report.SimpleService{
+			uuid.Must(uuid.NewV4()): {Pause: false, Points: 1},
+			uuid.Must(uuid.NewV4()): {Pause: false, Points: 20},
+			uuid.Must(uuid.NewV4()): {Pause: false, Points: 300},
+			uuid.Must(uuid.NewV4()): {Pause: true, Points: 4000},
+			uuid.Must(uuid.NewV4()): {Pause: false, Points: 50000},
 		},
 	}
 
-	if h.TotalPoints() != 0 {
+	if TotalHostPoints(&h) != 0 {
 		t.Fail()
 	}
 }

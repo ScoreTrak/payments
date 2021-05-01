@@ -1,42 +1,49 @@
 package report
 
-import "reflect"
+import (
+	"fmt"
+	report2 "github.com/ScoreTrak/ScoreTrak/pkg/report"
+	"github.com/gofrs/uuid"
+	"reflect"
+)
 import "testing"
 
 func TestReport(t *testing.T) {
-	report := Report{
+	report := report2.SimpleReport{
 		Round: 123,
-		Teams: map[string]*Team{
-			"team-1": {
-				Pause: true,
-				Hosts: map[string]*Host{
-					"host-a": {
-						Pause: true,
-						Services: map[string]*Service{
-							"service-a": {Pause: true, Points: 1},
-							"service-b": {Pause: true, Points: 20},
-						},
-					},
-					"host-b": {
+		Teams: map[uuid.UUID]*report2.SimpleTeam{
+			uuid.Must(uuid.NewV4()): {
+				Name:  "team-123",
+				Pause: false,
+				Hosts: map[uuid.UUID]*report2.SimpleHost{
+					uuid.Must(uuid.NewV4()): {
 						Pause: false,
-						Services: map[string]*Service{
-							"service-c": {Pause: true, Points: 300},
-							"service-d": {Pause: true, Points: 4000},
+						Services: map[uuid.UUID]*report2.SimpleService{
+							uuid.Must(uuid.NewV4()): {Pause: false, Points: 1},
+							uuid.Must(uuid.NewV4()): {Pause: false, Points: 20},
 						},
 					},
-					"host-c": {
+					uuid.Must(uuid.NewV4()): {
 						Pause: true,
-						Services: map[string]*Service{
-							"service-e": {Pause: true, Points: 50000},
-							"service-f": {Pause: true, Points: 600000},
+						Services: map[uuid.UUID]*report2.SimpleService{
+							uuid.Must(uuid.NewV4()): {Pause: false, Points: 300},
+							uuid.Must(uuid.NewV4()): {Pause: false, Points: 4000},
+						},
+					},
+					uuid.Must(uuid.NewV4()): {
+						Pause: false,
+						Services: map[uuid.UUID]*report2.SimpleService{
+							uuid.Must(uuid.NewV4()): {Pause: false, Points: 50000},
+							uuid.Must(uuid.NewV4()): {Pause: false, Points: 600000},
 						},
 					},
 				},
 			},
 		},
 	}
-	expected := map[int]uint{123: 650021}
-	actual := report.PointsPerTeam()
+	expected := map[int]uint64{123: 650021}
+	actual := PointsPerTeam(&report)
+	fmt.Println(actual, expected)
 	if !reflect.DeepEqual(expected, actual) {
 		t.Fail()
 	}

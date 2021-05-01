@@ -1,17 +1,14 @@
 package report
 
-type Host struct {
-	Pause    bool
-	Services map[string]*Service
-}
+import "github.com/ScoreTrak/ScoreTrak/pkg/report"
 
-func (h *Host) TotalPoints() uint {
-	if !h.Pause {
+func TotalHostPoints(h *report.SimpleHost) uint64 {
+	if h.Pause {
 		return 0
 	}
-	var total uint = 0
+	var total uint64 = 0
 	for _, service := range h.Services {
-		total += service.TotalPoints()
+		total += TotalServicePoints(service)
 	}
 	return total
 }

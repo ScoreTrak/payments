@@ -6,6 +6,7 @@ import (
 	"github.com/ScoreTrak/ScoreTrak/pkg/report/reportpb"
 	"github.com/ScoreTrak/ScoreTrak/pkg/storage"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/ubnetdef/payment-processor/report"
 	"google.golang.org/grpc"
 	"log"
 	"net/http"
@@ -56,7 +57,7 @@ func main() {
 		log.Fatalln(err)
 	}
 	log.Printf("Got report for round %d\n", latestReport.Round)
-	current := latestReport.PointsPerTeam()
+	current := report.PointsPerTeam(latestReport)
 	previous := getMaxPointsPerTeam(db)
 	diff := computePointsDiff(current, previous)
 	client := http.Client{Timeout: time.Duration(conf.ClientTimeout) * time.Second}

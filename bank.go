@@ -9,8 +9,8 @@ import (
 	"net/http"
 )
 
-func computePointsDiff(currentPoints, previousPoints map[int]uint) map[int]uint {
-	diff := make(map[int]uint)
+func computePointsDiff(currentPoints, previousPoints map[int]uint64) map[int]uint64 {
+	diff := make(map[int]uint64)
 	for team, current := range currentPoints {
 		previous := previousPoints[team]
 		diff[team] = current - previous
@@ -24,7 +24,7 @@ type Deposit struct {
 	Amount string `json:"amount"`
 }
 
-func makeDeposit(client http.Client, teamPoints map[int]uint) {
+func makeDeposit(client http.Client, teamPoints map[int]uint64) {
 	depositUrl := conf.BankBaseUrl + "/api/bank/accounts/deposits/"
 
 	var deposits []Deposit

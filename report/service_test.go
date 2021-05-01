@@ -1,19 +1,20 @@
 package report
 
-import "testing"
+import (
+	"github.com/ScoreTrak/ScoreTrak/pkg/report"
+	"testing"
+)
 
 func TestServiceEnabled(t *testing.T) {
-	s := Service{Pause: true, Points: 123}
-
-	if s.TotalPoints() != 123 {
+	s := &report.SimpleService{Pause: false, Points: 123}
+	if TotalServicePoints(s) != 123 {
 		t.Fail()
 	}
 }
 
 func TestServiceDisabled(t *testing.T) {
-	s := Service{Pause: false, Points: 123}
-
-	if s.TotalPoints() != 0 {
+	s := &report.SimpleService{Pause: true, Points: 123}
+	if TotalServicePoints(s) != 0 {
 		t.Fail()
 	}
 }

@@ -12,8 +12,8 @@ type Config struct {
 	ScoreTrakPassword  string `default:""`
 	BankBaseUrl        string `default:"http://localhost"`
 	ScoreTrakAddress   string `default:"localhost"`
-	BankAmountPerPoint uint   `default:"10"`
-	ClientTimeout      uint   `default:"5"`
+	BankAmountPerPoint uint64 `default:"10"`
+	ClientTimeout      uint64 `default:"5"`
 	DB                 storage.Config
 }
 
