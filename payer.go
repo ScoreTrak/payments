@@ -3,10 +3,11 @@ package main
 import (
 	"flag"
 	"github.com/ScoreTrak/ScoreTrak/pkg/auth"
-	"github.com/ScoreTrak/ScoreTrak/pkg/report/reportpb"
+	authpb "github.com/ScoreTrak/ScoreTrak/pkg/proto/auth/v1"
+	reportpb "github.com/ScoreTrak/ScoreTrak/pkg/proto/report/v1"
 	"github.com/ScoreTrak/ScoreTrak/pkg/storage"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/ubnetdef/payment-processor/report"
+	"github.com/ScoreTrak/lockdown-payments/report"
+	"github.com/golang-jwt/jwt/v4"
 	"google.golang.org/grpc"
 	"log"
 	"net/http"
@@ -35,7 +36,7 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot dial server: ", err)
 	}
-	authClient := auth.NewAuthServiceClient(cc)
+	authClient := authpb.NewAuthServiceClient(cc)
 	log.Println("Requesting authentication token")
 	t, err := getAuth(authClient)
 	if err != nil {
@@ -49,7 +50,7 @@ func main() {
 	if !ok {
 		log.Fatalf("invalid token claims")
 	}
-	log.Println("Authentication token is valid until " + time.Unix(claims.ExpiresAt, 0).String())
+	log.Println("Authentication token is valid until " + claims.ExpiresAt.Time.String())
 	log.Println("Requesting report")
 	reportClient := reportpb.NewReportServiceClient(cc)
 	latestReport, err := getReport(reportClient, t)
