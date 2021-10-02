@@ -1,0 +1,16 @@
+name: Test
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+      - name: "Download golang environment"
+        uses: actions/setup-go@v2
+      - run: go version
+      - run: go mod tidy
+      - name: "Start golang test"
+        run: go test ./report/... --race -coverprofile=coverage.txt -covermode=atomic
