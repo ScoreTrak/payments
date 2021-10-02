@@ -23,13 +23,12 @@ require (
 	github.com/lib/pq v1.10.1 // indirect
 	github.com/masterzen/winrm v0.0.0-20201030141608-56ca5c5f2380 // indirect
 	github.com/miekg/dns v1.1.41 // indirect
-	github.com/stretchr/testify v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect
 	golang.org/x/net v0.0.0-20210428140749-89ef3d95e781 // indirect
 	golang.org/x/sys v0.0.0-20210426230700-d19ff857e887 // indirect
 	golang.org/x/term v0.0.0-20210429154555-c04ba851c2a4 // indirect
 	google.golang.org/genproto v0.0.0-20210429181445-86c259c2b4ab // indirect
-	google.golang.org/grpc v1.37.0
+	google.golang.org/grpc v1.41.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
