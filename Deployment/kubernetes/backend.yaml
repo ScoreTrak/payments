@@ -47,6 +47,47 @@ spec:
             - name: client-certs
               mountPath: /cockroach-certs
 
+
+        - name: start db migration
+          image: ubnetdef/lockdown-commerce-backend:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - "bash"
+            - "-c"
+            - "python manage.py migrate"
+          env:
+            - name: "DATABASE_URL"
+              value: "postgresql://root:SOME_SECURE_PASSWORD@scoretrak-cockroachdb-public:26257/bank?sslmode=require&sslcert=/cockroach-certs/client.root.crt&sslkey=/cockroach-certs/client.root.key&sslrootcert=/cockroach-certs/ca.crt"
+            - name: USE_COCKROACHDB
+              value: "true"
+          volumeMounts:
+            - name: client-certs
+              mountPath: /cockroach-certs
+
+
+        - name: create superuser
+          image: ubnetdef/lockdown-commerce-backend:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - "bash"
+            - "-c"
+            - "python manage.py createsuperuser --noinput"
+          env: #https://stackoverflow.com/a/59467533/9296389
+            - name: "DATABASE_URL"
+              value: "postgresql://root:SOME_SECURE_PASSWORD@scoretrak-cockroachdb-public:26257/bank?sslmode=require&sslcert=/cockroach-certs/client.root.crt&sslkey=/cockroach-certs/client.root.key&sslrootcert=/cockroach-certs/ca.crt"
+            - name: USE_COCKROACHDB
+              value: "true"
+            - name: DJANGO_SUPERUSER_PASSWORD
+              value: SOME_SECURE_PASSWORD_FOR_ADMIN
+            - name: DJANGO_SUPERUSER_USERNAME
+              value: admin
+            - name: DJANGO_SUPERUSER_EMAIL
+              value: admin@local
+          volumeMounts:
+            - name: client-certs
+              mountPath: /cockroach-certs
+
+
       containers:
         - name: backend
           image: ubnetdef/lockdown-commerce-backend:latest
