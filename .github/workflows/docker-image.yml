@@ -3,7 +3,7 @@ on:
   release:
     types: [published]
 jobs:
-  build-and-push-lockdown-payments:
+  build-and-push-payments:
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -27,5 +27,5 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/${{ env.IMAGE_REPOSITORY }}/lockdown-payments:${{ github.sha }}
-            ghcr.io/${{ env.IMAGE_REPOSITORY }}/lockdown-payments:${{ env.IMAGE_TAG }}
+            ghcr.io/${{ env.IMAGE_REPOSITORY }}/payments:${{ github.sha }}
+            ghcr.io/${{ env.IMAGE_REPOSITORY }}/payments:${{ env.IMAGE_TAG }}
