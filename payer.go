@@ -6,7 +6,7 @@ import (
 	authpb "github.com/ScoreTrak/ScoreTrak/pkg/proto/auth/v1"
 	reportpb "github.com/ScoreTrak/ScoreTrak/pkg/proto/report/v1"
 	"github.com/ScoreTrak/ScoreTrak/pkg/storage"
-	"github.com/ScoreTrak/lockdown-payments/report"
+	"github.com/ScoreTrak/payments/report"
 	"github.com/golang-jwt/jwt/v4"
 	"google.golang.org/grpc"
 	"log"

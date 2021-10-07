@@ -1,4 +1,4 @@
-module github.com/ScoreTrak/lockdown-payments
+module github.com/ScoreTrak/payments
 
 go 1.15
 
