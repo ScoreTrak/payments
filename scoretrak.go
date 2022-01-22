@@ -3,24 +3,24 @@ package main
 import (
 	"context"
 	"encoding/json"
-	authpb "github.com/ScoreTrak/ScoreTrak/pkg/proto/auth/v1"
-	reportpb "github.com/ScoreTrak/ScoreTrak/pkg/proto/report/v1"
 	"github.com/ScoreTrak/ScoreTrak/pkg/report"
+	authv1 "go.buf.build/grpc/go/scoretrak/scoretrakapis/scoretrak/auth/v1"
+	reportv1 "go.buf.build/grpc/go/scoretrak/scoretrakapis/scoretrak/report/v1"
 	"google.golang.org/grpc/metadata"
 	"log"
 )
 
-func getAuth(acli authpb.AuthServiceClient) (string, error) {
-	resp, err := acli.Login(context.Background(), &authpb.LoginRequest{Password: conf.ScoreTrakPassword, Username: conf.ScoreTrakUsername})
+func getAuth(acli authv1.AuthServiceClient) (string, error) {
+	resp, err := acli.Login(context.Background(), &authv1.LoginRequest{Password: conf.ScoreTrakPassword, Username: conf.ScoreTrakUsername})
 	if err != nil {
 		return "", err
 	}
 	return resp.AccessToken, nil
 }
 
-func getReport(repCli reportpb.ReportServiceClient, token string) (*report.SimpleReport, error) {
+func getReport(repCli reportv1.ReportServiceClient, token string) (*report.SimpleReport, error) {
 	ctx := metadata.NewOutgoingContext(context.Background(), metadata.Pairs("authorization", token))
-	resp, err := repCli.Get(ctx, &reportpb.GetRequest{})
+	resp, err := repCli.Get(ctx, &reportv1.GetRequest{})
 	if err != nil {
 		return nil, err
 	}
