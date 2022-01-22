@@ -3,11 +3,11 @@ package main
 import (
 	"flag"
 	"github.com/ScoreTrak/ScoreTrak/pkg/auth"
-	authpb "github.com/ScoreTrak/ScoreTrak/pkg/proto/auth/v1"
-	reportpb "github.com/ScoreTrak/ScoreTrak/pkg/proto/report/v1"
 	"github.com/ScoreTrak/ScoreTrak/pkg/storage"
 	"github.com/ScoreTrak/payments/report"
 	"github.com/golang-jwt/jwt/v4"
+	authv1 "go.buf.build/grpc/go/scoretrak/scoretrakapis/scoretrak/auth/v1"
+	reportv1 "go.buf.build/grpc/go/scoretrak/scoretrakapis/scoretrak/report/v1"
 	"google.golang.org/grpc"
 	"log"
 	"net/http"
@@ -36,7 +36,7 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot dial server: ", err)
 	}
-	authClient := authpb.NewAuthServiceClient(cc)
+	authClient := authv1.NewAuthServiceClient(cc)
 	log.Println("Requesting authentication token")
 	t, err := getAuth(authClient)
 	if err != nil {
@@ -52,7 +52,7 @@ func main() {
 	}
 	log.Println("Authentication token is valid until " + claims.ExpiresAt.Time.String())
 	log.Println("Requesting report")
-	reportClient := reportpb.NewReportServiceClient(cc)
+	reportClient := reportv1.NewReportServiceClient(cc)
 	latestReport, err := getReport(reportClient, t)
 	if err != nil {
 		log.Fatalln(err)
