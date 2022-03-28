@@ -13,7 +13,7 @@ require (
 	github.com/go-asn1-ber/asn1-ber v1.5.3 // indirect
 	github.com/go-ldap/ldap/v3 v3.4.1 // indirect
 	github.com/gofrs/uuid v4.0.0+incompatible
-	github.com/golang-jwt/jwt/v4 v4.1.0
+	github.com/golang-jwt/jwt/v4 v4.4.1
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/hirochachacha/go-smb2 v1.0.10 // indirect
 	github.com/jinzhu/configor v1.2.1
