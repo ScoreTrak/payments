@@ -22,11 +22,7 @@ require (
 	github.com/masterzen/winrm v0.0.0-20210623064412-3b76017826b0 // indirect
 	github.com/miekg/dns v1.1.43 // indirect
 	go.buf.build/grpc/go/scoretrak/scoretrakapis v1.2.3
-	golang.org/x/net v0.0.0-20210929193557-e81a3d93ecf6 // indirect
-	golang.org/x/sys v0.0.0-20211001092434-39dca1131b70 // indirect
-	golang.org/x/term v0.0.0-20210429154555-c04ba851c2a4 // indirect
-	google.golang.org/genproto v0.0.0-20211001223012-bfb93cce50d9 // indirect
-	google.golang.org/grpc v1.41.0
+	google.golang.org/grpc v1.52.3
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	gorm.io/driver/mysql v1.1.2 // indirect
